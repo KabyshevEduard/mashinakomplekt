@@ -18,5 +18,5 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     @Query("select d from Document d where d.topic.user.id = ?1 and d.title like %?2%")
     List<Document> findByUserIdAndTitleContainingIgnoreCase(Long userId, String title);
 
-    Optional<Document> findById(Long userId, Long id);
+    Optional<Document> findById(Long id);
 }
