@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TopicRequest {
+public class TopicRequestDto {
     String title;
 }

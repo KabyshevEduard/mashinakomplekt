@@ -1,7 +1,7 @@
 package com.mashinakomplekt.mysystem.services;
 
 import com.mashinakomplekt.mysystem.dao.DocumentRepository;
-import com.mashinakomplekt.mysystem.dto.DocumentDto.DocumentRequest;
+import com.mashinakomplekt.mysystem.dto.DocumentDto.DocumentRequestDto;
 import com.mashinakomplekt.mysystem.models.Document;
 import com.mashinakomplekt.mysystem.models.Topic;
 import com.mashinakomplekt.mysystem.models.User;
@@ -46,7 +46,7 @@ public class DocumentService {
     }
 
     // Добавление документа
-    public Document createDocument(String token, Long topicId, DocumentRequest documentReq) throws InvalidParameterException {
+    public Document createDocument(String token, Long topicId, DocumentRequestDto documentReq) throws InvalidParameterException {
         Topic topic = topicService.findById(token, topicId);
         Document doc = new Document();
         doc.setTitle(documentReq.getTitle());

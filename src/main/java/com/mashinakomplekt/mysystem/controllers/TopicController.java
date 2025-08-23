@@ -1,6 +1,7 @@
 package com.mashinakomplekt.mysystem.controllers;
 
-import com.mashinakomplekt.mysystem.dto.TopicDto.TopicRequest;
+import com.mashinakomplekt.mysystem.dto.TopicDto.TopicRequestDto;
+import com.mashinakomplekt.mysystem.dto.TopicDto.TopicResponseDto;
 import com.mashinakomplekt.mysystem.models.Topic;
 import com.mashinakomplekt.mysystem.services.TopicService;
 import lombok.RequiredArgsConstructor;
@@ -14,27 +15,30 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 public class TopicController {
+
     private final TopicService topicService;
 
     @PostMapping("/add")
-    public ResponseEntity<Topic> addTopic(
+    public ResponseEntity<TopicResponseDto> addTopic(
             @RequestHeader(name = "Authorization") String token,
-            @RequestBody TopicRequest topicReq
+            @RequestBody TopicRequestDto topicReq
     ) {
         String tokenn = token.substring(7);
         Topic topic = topicService.createTopic(tokenn, topicReq);
         log.info("Добавлен " + topicReq.toString());
-        return new ResponseEntity<Topic>(topic, HttpStatus.CREATED);
+        var topicDto = new TopicResponseDto(topic);
+        return new ResponseEntity<TopicResponseDto>(topicDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete{deleteId}")
-    public ResponseEntity<Topic> deleteTopic(
+    public ResponseEntity<TopicResponseDto> deleteTopic(
             @RequestHeader(name = "Authorization") String token,
             @RequestParam Long topicId
     ) {
         String tokenn = token.substring(7);
         Topic topic = topicService.deleteTopic(tokenn, topicId);
         log.info("Удален" + topic.toString());
-        return new ResponseEntity<Topic>(topic, HttpStatus.OK);
+        var topicDto = new TopicResponseDto(topic);
+        return new ResponseEntity<TopicResponseDto>(topicDto, HttpStatus.OK);
     }
 }

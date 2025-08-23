@@ -1,7 +1,7 @@
 package com.mashinakomplekt.mysystem.services;
 
 import com.mashinakomplekt.mysystem.dao.TopicRepository;
-import com.mashinakomplekt.mysystem.dto.TopicDto.TopicRequest;
+import com.mashinakomplekt.mysystem.dto.TopicDto.TopicRequestDto;
 import com.mashinakomplekt.mysystem.models.Topic;
 import com.mashinakomplekt.mysystem.models.User;
 import com.mashinakomplekt.mysystem.utils.JwtTokenUtil;
@@ -42,7 +42,7 @@ public class TopicService {
     }
 
     // Добавить себе topic
-    public Topic createTopic(String token, TopicRequest topicReq) throws InvalidParameterException {
+    public Topic createTopic(String token, TopicRequestDto topicReq) throws InvalidParameterException {
         User user = jwtTokenUtil.checkUser(token);
         List<Topic> topics = topicRepository.findByUserId(user.getId());
         Optional<Topic> exsTopic = topics.stream().findAny();
