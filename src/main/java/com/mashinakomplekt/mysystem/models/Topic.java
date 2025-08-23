@@ -22,6 +22,6 @@ public class Topic {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Document> documents;
 }

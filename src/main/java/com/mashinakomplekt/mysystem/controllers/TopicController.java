@@ -23,7 +23,18 @@ public class TopicController {
     ) {
         String tokenn = token.substring(7);
         Topic topic = topicService.createTopic(tokenn, topicReq);
-        log.info(topicReq.toString());
+        log.info("Добавлен " + topicReq.toString());
         return new ResponseEntity<Topic>(topic, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/delete{deleteId}")
+    public ResponseEntity<Topic> deleteTopic(
+            @RequestHeader(name = "Authorization") String token,
+            @RequestParam Long topicId
+    ) {
+        String tokenn = token.substring(7);
+        Topic topic = topicService.deleteTopic(tokenn, topicId);
+        log.info("Удален" + topic.toString());
+        return new ResponseEntity<Topic>(topic, HttpStatus.OK);
     }
 }

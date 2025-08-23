@@ -6,6 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class TopicRequest {
-    // Валидацию сделать
     String title;
 }

@@ -1,4 +1,4 @@
-package com.mashinakomplekt.mysystem.exceptions;
+package com.mashinakomplekt.mysystem.exceptionsHandler;
 
 
 import com.mashinakomplekt.mysystem.dto.InfoResponse.AppResponseDto;

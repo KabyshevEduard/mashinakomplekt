@@ -45,9 +45,9 @@ public class DocumentService {
         return mapDocs;
     }
 
-    // Добавление документов
-    public Document createDocument(String token, Long topic_id, DocumentRequest documentReq) throws InvalidParameterException {
-        Topic topic = topicService.findById(token, topic_id);
+    // Добавление документа
+    public Document createDocument(String token, Long topicId, DocumentRequest documentReq) throws InvalidParameterException {
+        Topic topic = topicService.findById(token, topicId);
         Document doc = new Document();
         doc.setTitle(documentReq.getTitle());
         doc.setTopic(topic);
@@ -59,5 +59,16 @@ public class DocumentService {
         doc.setPublishedAt(LocalDateTime.now());
         documentRepository.save(doc);
         return doc;
+    }
+
+    // Удаление документа
+    public Document deleteDocument(String token, Long documentId) throws InvalidParameterException {
+        User user = jwtTokenUtil.checkUser(token);
+        Optional<Document> doc = documentRepository.findById(documentId);
+        if (!doc.isPresent()) {
+            throw new InvalidParameterException("Документ " + documentId + " не найден");
+        }
+        documentRepository.delete(doc.get());
+        return doc.get();
     }
 }

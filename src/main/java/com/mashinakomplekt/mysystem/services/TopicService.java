@@ -36,7 +36,6 @@ public class TopicService {
         Optional<Topic> topicOp = topicRepository.findById(id);
         if (!topicOp.isPresent()) {
             String errMasage = "Топика с таким id не существует";
-            log.error(errMasage);
             throw new InvalidParameterException(errMasage);
         }
         return topicOp.get();
@@ -44,13 +43,27 @@ public class TopicService {
 
     // Добавить себе topic
     public Topic createTopic(String token, TopicRequest topicReq) throws InvalidParameterException {
-        // Добавить логику проверки, если уже существует топик с таким названием
-
         User user = jwtTokenUtil.checkUser(token);
+        List<Topic> topics = topicRepository.findByUserId(user.getId());
+        Optional<Topic> exsTopic = topics.stream().findAny();
+        if (exsTopic.isPresent()) {
+            throw new InvalidParameterException("Тема с таким названием уже существует");
+        }
         Topic topic = new Topic();
         topic.setUser(user);
         topic.setTitle(topicReq.getTitle());
         topicRepository.save(topic);
         return topic;
+    }
+
+    // Удалить топик со всеми документами
+    public Topic deleteTopic(String token, Long id) throws InvalidParameterException {
+        User user = jwtTokenUtil.checkUser(token);
+        Optional<Topic> topicOp = topicRepository.findById(id);
+        if (!topicOp.isPresent()) {
+            throw new InvalidParameterException("Такой темы не существует");
+        }
+        topicRepository.delete(topicOp.get());
+        return topicOp.get();
     }
 }

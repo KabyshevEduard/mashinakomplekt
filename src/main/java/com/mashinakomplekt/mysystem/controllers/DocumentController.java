@@ -40,14 +40,26 @@ public class DocumentController {
         return data;
     }
 
-    @PostMapping("/add{topic_id}")
+    @PostMapping("/add{topicId}")
     public ResponseEntity<Document> addDocument(
             @RequestHeader(name = "Authorization") String token,
-            @RequestParam Long topic_id,
+            @RequestParam Long topicId,
             @RequestBody DocumentRequest documentReq
     ) {
-        Document doc = documentService.createDocument(token, topic_id, documentReq);
+        String tokenn = token.substring(7);
+        Document doc = documentService.createDocument(tokenn, topicId, documentReq);
         log.info(documentReq.toString());
         return new ResponseEntity<Document>(doc, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/delete{documentId}")
+    public ResponseEntity<Document> deleteDocument(
+            @RequestHeader(name = "Authorization") String token,
+            @RequestParam Long documentId
+    ) {
+        String tokenn = token.substring(7);
+        Document doc = documentService.deleteDocument(tokenn, documentId);
+        log.info(doc.toString());
+        return new ResponseEntity<Document>(doc, HttpStatus.OK);
     }
 }
