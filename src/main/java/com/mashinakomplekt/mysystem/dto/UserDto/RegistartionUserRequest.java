@@ -4,16 +4,15 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 public class RegistartionUserRequest {
 
-    @Min(5)
-    @Max(50)
+    @Length(min = 5, max = 50)
     private String username;
 
-    @Min(8)
-    @Max(100)
+    @Length(min = 8, max = 100)
     private String password;
 
     private String confirmPassword;
@@ -21,8 +20,7 @@ public class RegistartionUserRequest {
     @Email
     private String email;
 
-    @Min(2)
-    @Max(50)
+    @Length(min = 2, max = 100)
     private String name;
 
 }

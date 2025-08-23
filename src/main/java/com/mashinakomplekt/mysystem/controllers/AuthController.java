@@ -6,6 +6,7 @@ import com.mashinakomplekt.mysystem.dto.JwtDto.JwtRequest;
 import com.mashinakomplekt.mysystem.dto.JwtDto.JwtResponse;
 import com.mashinakomplekt.mysystem.dto.UserDto.RegistartionUserRequest;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> createNewUser(@RequestBody RegistartionUserRequest userRequest) {
+    public ResponseEntity<?> createNewUser(@RequestBody @Valid RegistartionUserRequest userRequest) {
         log.info("Request body: {}", userRequest);
         AppResponseDto appError = authService.createNewUser(userRequest);
         return new ResponseEntity<AppResponseDto>(appError, HttpStatus.valueOf(appError.getStatus()));
