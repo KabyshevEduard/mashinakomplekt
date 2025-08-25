@@ -27,13 +27,13 @@ public class User {
     @Column(name = "email", length = 100, unique = true)
     private String email;
 
-    @ManyToMany
-    @JoinTable(name = "user_roles",
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<Role> roles;
 
-    @OneToMany(mappedBy = "user")
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Topic> topics;
 }

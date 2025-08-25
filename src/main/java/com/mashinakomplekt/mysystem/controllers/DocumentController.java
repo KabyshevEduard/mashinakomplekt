@@ -36,22 +36,6 @@ public class DocumentController {
         return mapDocs;
     }
 
-    @GetMapping("/my{title}")
-    public Map<String, List<Document>> getDocumentsByTitle(
-            @RequestHeader(name = "Authorization") String token,
-            @RequestParam String title
-    ) {
-        String tokenn = token.substring(7);
-        Map<String, List<Document>> data = documentService.findDocumentsByTitle(tokenn, title);
-        log.info("Документы: " + data.toString());
-        Map<String, List<DocumentResponseDto>> mapDocs = new HashMap<>();
-        for (String key : data.keySet()) {
-            List<DocumentResponseDto> docDto = data.get(key).stream().map(t -> new DocumentResponseDto(t)).collect(Collectors.toList());
-            mapDocs.put(key, docDto);
-        }
-        return data;
-    }
-
     @PostMapping("/add{topicId}")
     public ResponseEntity<DocumentResponseDto> addDocument(
             @RequestHeader(name = "Authorization") String token,

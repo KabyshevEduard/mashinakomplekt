@@ -30,10 +30,10 @@ public class TopicController {
         return new ResponseEntity<TopicResponseDto>(topicDto, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete{deleteId}")
+    @DeleteMapping("/delete")
     public ResponseEntity<TopicResponseDto> deleteTopic(
             @RequestHeader(name = "Authorization") String token,
-            @RequestParam Long topicId
+            @RequestParam(name = "id") Long topicId
     ) {
         String tokenn = token.substring(7);
         Topic topic = topicService.deleteTopic(tokenn, topicId);

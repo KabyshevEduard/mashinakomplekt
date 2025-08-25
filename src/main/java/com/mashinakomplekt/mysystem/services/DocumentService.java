@@ -30,21 +30,6 @@ public class DocumentService {
         return mapDocs;
     }
 
-    // Получить свои документы по title
-    public Map<String, List<Document>> findDocumentsByTitle(String token,  String title) throws InvalidParameterException {
-        User user = jwtTokenUtil.checkUser(token);
-        List<Document> docs = documentRepository.findByUserIdAndTitleContainingIgnoreCase(user.getId(), title);
-        HashMap<String, List<Document>> mapDocs = new HashMap<>();
-        for (Document document : docs) {
-            if (!mapDocs.containsKey(document.getTopic().getTitle())) {
-                mapDocs.put(document.getTopic().getTitle(), new ArrayList<Document>(Arrays.asList(document)));
-            } else {
-                mapDocs.get(document.getTopic().getTitle()).add(document);
-            }
-        }
-        return mapDocs;
-    }
-
     // Добавление документа
     public Document createDocument(String token, Long topicId, DocumentRequestDto documentReq) throws InvalidParameterException {
         Topic topic = topicService.findById(token, topicId);
