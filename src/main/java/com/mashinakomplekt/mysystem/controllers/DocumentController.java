@@ -46,20 +46,11 @@ public class DocumentController {
             @RequestParam String title,
             @RequestParam String description,
             @RequestParam("file") MultipartFile multipartFile
-    ) {
+    ) throws IOException {
         String tokenn = token.substring(7);
 
-        // Метаданные файла
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-
-        // Сделать глобальный обработчик IOException
-        String filePath = null;
-        try {
-            filePath = FileUploadUtil.saveFile(fileName, multipartFile);
-        } catch (IOException ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-
+        String filePath = filePath = FileUploadUtil.saveFile(fileName, multipartFile);
         Document doc = documentService.createDocument(tokenn, topicId, title, description, filePath);
         log.info("Добавлен документ: title: " + title + ", description: " + description + ", path: " + filePath + ";");
         var docDto = new DocumentResponseDto(doc);
