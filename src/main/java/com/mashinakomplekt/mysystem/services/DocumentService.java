@@ -1,7 +1,6 @@
 package com.mashinakomplekt.mysystem.services;
 
 import com.mashinakomplekt.mysystem.dao.DocumentRepository;
-import com.mashinakomplekt.mysystem.dto.DocumentDto.DocumentRequestDto;
 import com.mashinakomplekt.mysystem.models.Document;
 import com.mashinakomplekt.mysystem.models.Topic;
 import com.mashinakomplekt.mysystem.models.User;
@@ -31,16 +30,13 @@ public class DocumentService {
     }
 
     // Добавление документа
-    public Document createDocument(String token, Long topicId, DocumentRequestDto documentReq) throws InvalidParameterException {
+    public Document createDocument(String token, Long topicId, String title, String description, String filePath) throws InvalidParameterException {
         Topic topic = topicService.findById(token, topicId);
         Document doc = new Document();
-        doc.setTitle(documentReq.getTitle());
+        doc.setTitle(title);
         doc.setTopic(topic);
-
-        // Сделать утилиту для создания пути
-        doc.setPath("/data/" + documentReq.getTitle() + ".pdf");
-
-        doc.setDescription(documentReq.getDescription());
+        doc.setPath(filePath);
+        doc.setDescription(description);
         doc.setPublishedAt(LocalDateTime.now());
         documentRepository.save(doc);
         return doc;

@@ -1,20 +1,23 @@
 package com.mashinakomplekt.mysystem.controllers;
 
-import com.mashinakomplekt.mysystem.dto.DocumentDto.DocumentRequestDto;
 import com.mashinakomplekt.mysystem.dto.DocumentDto.DocumentResponseDto;
 import com.mashinakomplekt.mysystem.models.Document;
 import com.mashinakomplekt.mysystem.services.DocumentService;
+import com.mashinakomplekt.mysystem.utils.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequestMapping("/documents")
@@ -40,11 +43,25 @@ public class DocumentController {
     public ResponseEntity<DocumentResponseDto> addDocument(
             @RequestHeader(name = "Authorization") String token,
             @RequestParam Long topicId,
-            @RequestBody DocumentRequestDto documentReq
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam("file") MultipartFile multipartFile
     ) {
         String tokenn = token.substring(7);
-        Document doc = documentService.createDocument(tokenn, topicId, documentReq);
-        log.info("Добавлен документ: " + documentReq.toString());
+
+        // Метаданные файла
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+
+        // Сделать глобальный обработчик IOException
+        String filePath = null;
+        try {
+            filePath = FileUploadUtil.saveFile(fileName, multipartFile);
+        } catch (IOException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        Document doc = documentService.createDocument(tokenn, topicId, title, description, filePath);
+        log.info("Добавлен документ: title: " + title + ", description: " + description + ", path: " + filePath + ";");
         var docDto = new DocumentResponseDto(doc);
         return new ResponseEntity<DocumentResponseDto>(docDto, HttpStatus.CREATED);
     }
