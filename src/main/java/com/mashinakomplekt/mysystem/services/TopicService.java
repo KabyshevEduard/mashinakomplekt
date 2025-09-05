@@ -42,9 +42,11 @@ public class TopicService {
         User user = jwtTokenUtil.checkUser(token);
         List<Topic> topics =  user.getTopics();
         String newTitle = topicReq.getTitle();
-        Optional<Topic> topic =  topics.stream().filter(t -> t.getTitle().equals(newTitle)).findFirst();
-        if (topic.isPresent()) {
-            throw new InvalidParameterException("Такая тема уже существует");
+        if (topics != null) {
+            Optional<Topic> topic =  topics.stream().filter(t -> t.getTitle().equals(newTitle)).findFirst();
+            if (topic.isPresent()) {
+                throw new InvalidParameterException("Такая тема уже существует");
+            }
         }
         Topic newTopic = new Topic();
         newTopic.setTitle(topicReq.getTitle());
