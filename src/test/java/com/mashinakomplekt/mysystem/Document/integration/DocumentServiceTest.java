@@ -71,6 +71,8 @@ public class DocumentServiceTest {
         Assertions.assertEquals("New document", doc.getTitle());
     }
 
+    // Тесты для удаления и получения всех записей
+
     private void putRole() {
         Role role = new Role();
         role.setKind("ROLE_USER");

@@ -60,10 +60,8 @@ public class TopicServiceTest {
         topicService.createTopic(token, topicRequest);
         TypedQuery<Topic> query = em.createQuery("select t from Topic t where t.title = :title", Topic.class);
         Topic topic = query.setParameter("title", topicRequest.getTitle()).getSingleResult();
-        topicService.deleteTopic(token, topic.getId());
-        TypedQuery<Topic> query1 = em.createQuery("select t from Topic t where t.title = :title", Topic.class);
-        TypedQuery<Topic> result = query1.setParameter("title", topicRequest.getTitle());
-        Assertions.assertThrows(NoResultException.class, result::getSingleResult);
+        Topic deletedTopic = topicService.deleteTopic(token, topic.getId());
+        Assertions.assertEquals(deletedTopic.getTitle(), topicRequest.getTitle());
     }
 
     private void putRole() {

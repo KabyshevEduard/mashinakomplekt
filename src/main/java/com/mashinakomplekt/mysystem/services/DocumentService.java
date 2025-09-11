@@ -51,7 +51,7 @@ public class DocumentService {
         if (!doc.isPresent()) {
             throw new InvalidParameterException("Документ " + documentId + " не найден");
         }
-        documentRepository.delete(doc.get());
+        documentRepository.deleteById(doc.get().getId());
         return doc.get();
     }
 }
