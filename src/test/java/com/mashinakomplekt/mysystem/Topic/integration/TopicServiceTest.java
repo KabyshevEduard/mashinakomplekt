@@ -50,6 +50,12 @@ public class TopicServiceTest {
         TypedQuery<Topic> query = em.createQuery("select t from Topic t where t.title = :title", Topic.class);
         Topic topic = query.setParameter("title", topicRequest.getTitle()).getSingleResult();
         Assertions.assertEquals(topicRequest.getTitle(), topic.getTitle());
+
+        TopicRequestDto topicRequest1 = new TopicRequestDto("Глины");
+        topicService.createTopic(token, topicRequest1);
+        TypedQuery<Topic> query1 = em.createQuery("select t from Topic t where t.title = :title", Topic.class);
+        Topic topic1 = query1.setParameter("title", topicRequest1.getTitle()).getSingleResult();
+        Assertions.assertEquals(topicRequest1.getTitle(), topic1.getTitle());
     }
 
     @Test

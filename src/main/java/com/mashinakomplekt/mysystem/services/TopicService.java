@@ -50,16 +50,22 @@ public class TopicService {
         User user = jwtTokenUtil.checkUser(token);
         List<Topic> topics = user.getTopics();
         String newTitle = topicReq.getTitle();
+
+        Topic newTopic = new Topic();
+        newTopic.setTitle(topicReq.getTitle());
+        newTopic.setUsers(List.of(user));
+
         if (topics != null) {
             Optional<Topic> topic = topics.stream().filter(t -> t.getTitle().equals(newTitle)).findFirst();
             if (topic.isPresent()) {
                 throw new InvalidParameterException("Такая тема уже существует");
             }
-            // Добавление к уже существующим записям
+            List<Topic> newTopics = new ArrayList<>(topics);
+            newTopics.add(newTopic);
+            user.setTopics(newTopics);
+            Topic savedTopic = topicRepository.save(newTopic);
+            return savedTopic;
         }
-        Topic newTopic = new Topic();
-        newTopic.setTitle(topicReq.getTitle());
-        newTopic.setUsers(List.of(user));
         user.setTopics(List.of(newTopic));
         Topic topic = topicRepository.save(newTopic);
         return topic;
