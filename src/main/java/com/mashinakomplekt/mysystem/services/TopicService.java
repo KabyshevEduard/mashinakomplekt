@@ -28,7 +28,7 @@ public class TopicService {
     // Получить все свои topics
     public List<Topic> findAll(String token) {
         User user = jwtTokenUtil.checkUser(token);
-        List<Topic> topics = user.getTopics();
+        List<Topic> topics = topicRepository.findAllByUserId(user.getId());
         return topics;
     }
 

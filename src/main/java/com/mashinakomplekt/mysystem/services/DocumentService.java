@@ -26,7 +26,7 @@ public class DocumentService {
     // Получить все свои документы
     public Map<String, List<Document>> findMyAllDocuments(String token) throws InvalidParameterException {
         List<Topic> topics = topicService.findAll(token);
-        Map<String, List<Document>> mapDocs = topics.stream().collect(Collectors.toMap(t -> t.getTitle(), t -> t.getDocuments()));
+        Map<String, List<Document>> mapDocs = topics.stream().collect(Collectors.toMap(topic -> topic.getTitle(), topic -> topic.getDocuments()));
         return mapDocs;
     }
 
@@ -36,10 +36,15 @@ public class DocumentService {
         Topic topic = topicService.findById(topicId);
         Document doc = new Document();
         doc.setTitle(title);
-        doc.setTopic(topic);
         doc.setPath(filePath);
         doc.setDescription(description);
         doc.setPublishedAt(LocalDateTime.now());
+
+        if (topic.getDocuments() == null) {
+            topic.setDocuments(new ArrayList<Document>());
+        }
+
+        topic.getDocuments().add(doc);
         documentRepository.save(doc);
         return doc;
     }

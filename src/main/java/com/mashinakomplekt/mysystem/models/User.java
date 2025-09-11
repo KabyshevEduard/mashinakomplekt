@@ -34,6 +34,6 @@ public class User {
     )
     private List<Role> roles;
 
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Topic> topics;
 }

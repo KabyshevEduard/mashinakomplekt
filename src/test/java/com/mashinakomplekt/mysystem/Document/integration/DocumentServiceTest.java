@@ -24,6 +24,7 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @SpringBootTest(
@@ -55,11 +56,11 @@ public class DocumentServiceTest {
     @Test
     public void createDocumentTest() {
         putRole();
-        String token = getToken();
+        String userToken = getToken();
         TopicRequestDto topicRequestDto = new TopicRequestDto("Глины");
-        Topic topic = topicService.createTopic(token, topicRequestDto);
+        Topic topic = topicService.createTopic(userToken, topicRequestDto);
         documentService.createDocument(
-                token,
+                userToken,
                 topic.getId(),
                 "New document",
                 "what the hell are you talking about",
@@ -72,6 +73,16 @@ public class DocumentServiceTest {
     }
 
     // Тесты для удаления и получения всех записей
+    @Test
+    public void findAllDocumentTest() {
+        putRole();
+        String userToken = getToken();
+        TopicRequestDto topicRequestDto = new TopicRequestDto("Глины");
+        Topic topic = topicService.createTopic(userToken, topicRequestDto);
+        Document doc = documentService.createDocument(userToken, topic.getId(), "New document", "what the hell are you talking about", "C://Users/Desktop");
+        Map<String, List<Document>> result = documentService.findMyAllDocuments(userToken);
+        Assertions.assertEquals(result.get("Глины").get(0).getTitle(), "New document");
+    }
 
     private void putRole() {
         Role role = new Role();
