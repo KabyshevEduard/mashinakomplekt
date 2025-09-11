@@ -8,6 +8,7 @@ import com.mashinakomplekt.mysystem.models.User;
 import com.mashinakomplekt.mysystem.utils.JwtTokenUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
@@ -22,6 +23,7 @@ import java.util.Optional;
 public class TopicService {
     private final TopicRepository topicRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private final UserService userService;
 
     // Получить все свои topics
     public List<Topic> findAll(String token) {
@@ -30,30 +32,37 @@ public class TopicService {
         return topics;
     }
 
-    // Получить topic по id
-    public Topic findById(String token, Long id) throws InvalidParameterException {
+    // Получить topic у user по id
+    public Topic findUserTopicById(String token, Long id) throws InvalidParameterException {
         User user = jwtTokenUtil.checkUser(token);
-        Topic topic =  user.getTopics().stream().findFirst().orElseThrow(InvalidParameterException::new);
+        Topic topic = user.getTopics().stream().findFirst().orElseThrow(InvalidParameterException::new);
+        return topic;
+    }
+
+    // Получить topic по id
+    public Topic findById(Long id) throws InvalidParameterException {
+        Topic topic = topicRepository.findById(id).orElseThrow(InvalidParameterException::new);
         return topic;
     }
 
     // Добавить себе topic
-    public Topic createTopic(String token, TopicRequestDto topicReq) throws InvalidParameterException {
+    public Topic createTopic(String token, TopicRequestDto topicReq) throws UsernameNotFoundException, InvalidParameterException {
         User user = jwtTokenUtil.checkUser(token);
-        List<Topic> topics =  user.getTopics();
+        List<Topic> topics = user.getTopics();
         String newTitle = topicReq.getTitle();
         if (topics != null) {
-            Optional<Topic> topic =  topics.stream().filter(t -> t.getTitle().equals(newTitle)).findFirst();
+            Optional<Topic> topic = topics.stream().filter(t -> t.getTitle().equals(newTitle)).findFirst();
             if (topic.isPresent()) {
                 throw new InvalidParameterException("Такая тема уже существует");
             }
+            // Добавление к уже существующим записям
         }
         Topic newTopic = new Topic();
         newTopic.setTitle(topicReq.getTitle());
-        newTopic.setDocuments(new ArrayList<Document>());
         newTopic.setUsers(List.of(user));
-        topicRepository.save(newTopic);
-        return newTopic;
+        user.setTopics(List.of(newTopic));
+        Topic topic = topicRepository.save(newTopic);
+        return topic;
     }
 
     // Удалить топик со всеми документами

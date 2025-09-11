@@ -40,7 +40,7 @@ public class AuthService {
         if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
             return new AppResponseDto(HttpStatus.BAD_REQUEST.value(), "Пароли не совпадают");
         }
-        if (userService.findByUsername(userRequest.getUsername()).isPresent()) {
+        if (userService.findByUsername(userRequest.getUsername()) != null) {
             return new AppResponseDto(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким ником уже существует");
         }
 

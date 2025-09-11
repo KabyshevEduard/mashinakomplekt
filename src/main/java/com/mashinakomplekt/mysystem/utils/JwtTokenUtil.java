@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.security.InvalidParameterException;
@@ -47,21 +48,20 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public User checkUser(String token) throws InvalidParameterException {
+    public User checkUser(String token) throws UsernameNotFoundException, InvalidParameterException {
         String username = null;
         try {
             username = getUsername(token);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             String errMessage = "JWT токен не корректен, либо срок использования истек";
             throw new InvalidParameterException(errMessage);
         }
-        Optional<User> userOp = userService.findByUsername(username);
-        if (!userOp.isPresent()) {
-            String errMesssage = "Такого пользователя не существует";
-            throw new InvalidParameterException(errMesssage);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("Такого пользователя не существует");
         }
-
-        return userOp.get();
+        return user;
     }
 
     public String getUsername(String token) {

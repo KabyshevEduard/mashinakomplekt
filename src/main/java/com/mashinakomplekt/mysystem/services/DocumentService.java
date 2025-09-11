@@ -22,6 +22,7 @@ public class DocumentService {
     private final TopicService topicService;
     private final JwtTokenUtil jwtTokenUtil;
 
+
     // Получить все свои документы
     public Map<String, List<Document>> findMyAllDocuments(String token) throws InvalidParameterException {
         List<Topic> topics = topicService.findAll(token);
@@ -31,7 +32,8 @@ public class DocumentService {
 
     // Добавление документа
     public Document createDocument(String token, Long topicId, String title, String description, String filePath) throws InvalidParameterException {
-        Topic topic = topicService.findById(token, topicId);
+        topicService.findUserTopicById(token, topicId);
+        Topic topic = topicService.findById(topicId);
         Document doc = new Document();
         doc.setTitle(title);
         doc.setTopic(topic);
