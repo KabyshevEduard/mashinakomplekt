@@ -1,1 +1,3 @@
-Нужно добавить в таблицу roles строчку (1, "ROLE_USER")
+🤖Java system to work with corporate documents
+
+You can keep your documents in different topics and add your colleagues in it.
